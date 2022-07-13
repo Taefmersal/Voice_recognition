@@ -1,0 +1,177 @@
+<!--Taef omar-->
+<!DOCTYPE html>
+
+<html lang="ar">
+
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>voice recognition </title>
+
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        font-family: 'Montserrat';
+        font-size: 20px;
+    }
+
+    section {
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        background: rgb(37, 37, 37);
+        flex-direction: column;
+        padding: 50px;
+    }
+
+    section h1 {
+
+        color: rgba(255, 255, 255, 0.322);
+        text-align: center;
+        width: 100%;
+        font-size: 50px;
+        margin-bottom: 70px;
+    }
+
+    section p {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.322);
+        width: 100%;
+        margin-bottom: 40px;
+
+    }
+
+
+    .container {
+
+        width: 90%;
+        max-width: 500px;
+        margin: 0 auto;
+        justify-content: center;
+    }
+
+    .texts p {
+        color: black;
+        text-align: right;
+        background-color: white;
+        width: 100%;
+        padding: 10px;
+        border-radius: 15px;
+        margin-bottom: 10px;
+
+
+
+    }
+
+    .texts p.replay {
+
+        text-align: left;
+        background-color: aqua;
+    }
+
+    button {
+
+        padding: 12px 20px;
+        background: aqua;
+        border: 0;
+        border-radius: 5px;
+        cursor: pointer;
+        color: #fff;
+        bottom: 378px;
+        right: 530px;
+        width: 200px;
+        position: fixed;
+
+
+
+
+
+    }
+</style>
+
+<body>
+    <section>
+        <h1>Speech<br>Recognition</h1>
+        <button id="record">Say something!</button>
+        <div class="container">
+            <div class="texts">
+               
+            </div>
+        </div>
+
+    </section>
+    <script>
+        document.getElementById("record").addEventListener('click', () => { //when the user click on button the event will start 
+
+            const texts = document.querySelector('.texts');
+            window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+            const recognition = new window.SpeechRecognition();
+            recognition.lang = "ar"; //set the recognition language in arabic 
+            recognition.interimResults = true; //
+
+            let p = document.createElement('p'); //create a pargraph
+
+            recognition.addEventListener('result', (e) => { //listener to the result
+                const text = Array.from(e.results) 
+                    .map(result => result[0])//map on the first element in the list 
+                    .map(result => result.transcript) // map again and return the result transcript 
+                    .join(''); // and join the sentence 
+
+                p.innerText = text; //the speech will appear on the white pargraph 
+                texts.appendChild(p);
+
+                if (e.results[0].isFinal) {// if the person speacking the sentsnce 
+                    if (text.includes('كيف حالك؟')) { // if the user said one of these sentence 
+                        p = document.createElement('p'); //write in new pargraph
+                        p.classList.add('replay'); // create a new class call replay 
+                        p.innerText = 'الحمدلله بخير'; // the system will interaction with this replay 
+                        texts.appendChild(p);
+                    }
+                    if (text.includes('ايش اسمك؟')) {
+                        p = document.createElement('p');
+                        p.classList.add('replay');
+                        p.innerText = ' Alexa ';
+                        texts.appendChild(p);
+                    }
+                    if (text.includes('افتح اليوتيوب') || text.includes("أفتح اليوتيوب")) {
+                        p = document.createElement('p');
+                        p.classList.add('replay');
+                        p.innerText = 'تمام';
+                        texts.appendChild(p);
+                        window.open('https://youtube.com'); // the system will interact and open youtube app
+                    }
+
+                    if (text.includes('السلام عليكم') || text.includes("السلام عليكم ورحمة الله وبركاته")) {
+                        p = document.createElement('p');
+                        p.classList.add('replay');
+                        p.innerText = ' وعليكم السلام ورحمة الله وبركاته';
+                        texts.appendChild(p);
+                    }
+
+
+                    p = document.createElement('p'); //write in new pargraph
+                }
+
+                console.log(e);
+            })
+
+            recognition.addEventListener('end', () => { //if the user end the speech 
+                recognition.start(); //start again the recogntion 
+            })
+
+
+
+            recognition.start();
+        });
+
+    </script>
+</body>
+
+</html>
